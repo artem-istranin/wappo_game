@@ -1,9 +1,11 @@
 # Wappo game in Reinforcement Learning application
 
-*Spielregeln:*
+*Rules of the game:*
 
-- Player: takes one step per round
-- Monster: take two steps per round
-- Monster: always take the shortest route towards the player
-- Monster's moves: always move horizontally first, if no longer possible vertically
-- Pentagram: monster is frozen for three rounds. To be frozen again, the opponent must re-enter the pentagram.
+- Player (blue rhombus): takes one step per round
+- Monster (red x): take two steps per round; always take the shortest route towards the player; always move horizontally first, if no longer possible vertically
+- Pentagram (orange star in cercle): monster is frozen for three rounds. To be frozen again, the opponent must re-enter the pentagram.
+- Goal (green house): player should reach house
+
+
+![alt text](https://github.com/artem-istranin/wappo_game/blob/master/environment_example.png)
