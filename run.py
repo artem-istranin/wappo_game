@@ -1,9 +1,9 @@
 import json
 
-from enviroment import Wappo_Environment
+from environment import Wappo_Environment
 from q_learning import q_learning
 from visualizer import get_q_animation
-from enviroment import Wappo_levels
+from environment import Wappo_levels
 
 
 def save_json(outpath, data):

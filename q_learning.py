@@ -2,7 +2,7 @@ import numpy as np
 import random
 import copy
 
-from enviroment import Wappo_Environment
+from environment import Wappo_Environment
 
 
 class QValues(object):
