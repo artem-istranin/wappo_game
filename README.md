@@ -8,4 +8,10 @@
 - Goal (green house): player should reach house
 
 
-![alt text](https://github.com/artem-istranin/wappo_game/blob/master/environment_example.png)
+![alt text](https://github.com/artem-istranin/wappo_game/blob/master/level_142_demo.png)
+
+## Example
+
+`python run_wappo_level.py 142`
+
+https://user-images.githubusercontent.com/63958736/128630739-66657382-2c20-441f-a1dc-f892d7907f52.mp4
