@@ -17,4 +17,4 @@
 https://user-images.githubusercontent.com/63958736/128630739-66657382-2c20-441f-a1dc-f892d7907f52.mp4
 
 ## Sources
-- Rich Sutton andAndrew Barto.Reinforcement Learning: An Introduction, Second Edition, 2016.
+- Rich Sutton and Andrew Barto. Reinforcement Learning: An Introduction, Second Edition, 2016.
