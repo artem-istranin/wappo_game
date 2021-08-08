@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 from matplotlib import animation
 
@@ -18,7 +19,8 @@ def visualize_q_wappo(q, env, max_steps_animation=500):
         env.draw()
 
 
-def get_q_animation(q, env, max_steps_animation=500, split_player_monster_moves=True):
+def get_q_animation(q, env, max_steps_animation=500, split_player_monster_moves=True,
+                    out_filename=None, show=False):
     '''
         anim = get_q_animation(q, env)
         anim
@@ -63,5 +65,13 @@ def get_q_animation(q, env, max_steps_animation=500, split_player_monster_moves=
     anim = animation.FuncAnimation(fig, animate,
                                    frames=len(res_path), interval=500,
                                    blit=True, repeat=False)
-    plt.show()
+    if out_filename is not None:
+        if os.path.splitext(out_filename)[-1] != '.mp4':
+            raise ValueError('Video filename must have .mp4 extension')
+        Writer = animation.writers['ffmpeg']
+        writer = Writer(fps=3, metadata=dict(artist='Me'), bitrate=1800)
+        anim.save(out_filename, writer=writer)
+        print('Level animation is saved as {}'.format(out_filename))
+    if show:
+        plt.show()
     return anim

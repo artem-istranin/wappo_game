@@ -95,9 +95,9 @@ def q_learning(env, q=None, initialization_strategy='normal',
                show_intermediate_evals=True, random_seed=None, debug=False):
     if random_seed is None:
         random_seed = np.random.randint(100, 9999999)
+    print('random seed value: {}'.format(random_seed))
     np.random.seed(random_seed)
     random.seed(random_seed + 5)
-    print('random seed value: {}'.format(random_seed))
 
     if not q:
         q = QValues(initialization_strategy=initialization_strategy)
