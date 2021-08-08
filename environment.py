@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 
-Wappo_levels = {
+WAPPO_LEVELS = {
     'level_0': {
         'field_size': [6, 6],
         'start': (3, 2),
@@ -23,7 +23,7 @@ Wappo_levels = {
                   ((5, 1), (6, 1)),
                   ((5, 5), (6, 5)),
                   ((6, 5), (6, 6))],
-        'pentagrams': [(2,5)]
+        'pentagrams': [(2, 5)]
     },
     'level_2': {
         'field_size': [6, 6],
@@ -35,7 +35,7 @@ Wappo_levels = {
                   ((2, 1), (2, 2)),
                   ((4, 2), (4, 3)),
                   ((5, 1), (5, 2))],
-        'pentagrams': [(3,5)]
+        'pentagrams': [(3, 5)]
     },
     'level_3': {
         'field_size': [6, 6],
@@ -54,7 +54,7 @@ Wappo_levels = {
                   ((4, 5), (5, 5)),
                   ((5, 1), (5, 2)),
                   ((5, 5), (5, 6))],
-        'pentagrams': [(4,2), (6,3)]
+        'pentagrams': [(4, 2), (6, 3)]
     },
     'level_4': {
         'field_size': [6, 6],
@@ -70,7 +70,7 @@ Wappo_levels = {
                   ((5, 4), (5, 5)),
                   ((5, 4), (6, 4)),
                   ((3, 6), (4, 6))],
-        'pentagrams': [(3,2)]
+        'pentagrams': [(3, 2)]
     },
     'level_5': {
         'field_size': [6, 6],
@@ -86,7 +86,7 @@ Wappo_levels = {
                   ((5, 4), (5, 5)),
                   ((5, 6), (6, 6)),
                   ((6, 2), (6, 3))],
-        'pentagrams': [(1,5)]
+        'pentagrams': [(1, 5)]
     },
     'level_6': {
         'field_size': [6, 6],
@@ -102,7 +102,7 @@ Wappo_levels = {
                   ((5, 4), (6, 4)),
                   ((6, 2), (6, 3)),
                   ((6, 3), (6, 4))],
-        'pentagrams': [(2, 1),(6, 2)]
+        'pentagrams': [(2, 1), (6, 2)]
     },
     'level_7': {
         'field_size': [6, 6],
@@ -118,7 +118,7 @@ Wappo_levels = {
                   ((4, 3), (4, 4)),
                   ((5, 1), (5, 2)),
                   ((6, 4), (6, 5))],
-        'pentagrams': [(3, 5),(5, 6)]
+        'pentagrams': [(3, 5), (5, 6)]
     },
     'level_8': {
         'field_size': [6, 6],
@@ -134,7 +134,7 @@ Wappo_levels = {
                   ((3, 4), (4, 4)),
                   ((4, 1), (4, 2)),
                   ((4, 2), (4, 3))],
-        'pentagrams': [(6, 2),(5, 5)]
+        'pentagrams': [(6, 2), (5, 5)]
     },
     'level_9': {
         'field_size': [6, 6],
@@ -177,7 +177,7 @@ Wappo_levels = {
                   ((3, 3), (3, 4)),
                   ((4, 3), (4, 4)),
                   ((6, 1), (6, 2))],
-        'pentagrams': [(4,2), (4,5)]
+        'pentagrams': [(4, 2), (4, 5)]
     },
     'level_30': {
         'field_size': [6, 6],
@@ -192,7 +192,7 @@ Wappo_levels = {
                   ((4, 4), (4, 5)),
                   ((5, 3), (5, 4)),
                   ((6, 3), (6, 4))],
-        'pentagrams': [(5,2)]
+        'pentagrams': [(5, 2)]
     },
     'level_48': {
         'field_size': [6, 6],
@@ -228,7 +228,7 @@ Wappo_levels = {
                   ((5, 2), (5, 3)),
                   ((5, 2), (6, 2)),
                   ((5, 6), (6, 6))],
-        'pentagrams': [(4,5),(6,2)]
+        'pentagrams': [(4, 5), (6, 2)]
     },
     'level_60': {
         'field_size': [6, 6],
@@ -406,7 +406,7 @@ Wappo_levels = {
 }
 
 
-class Wappo_Environment(object):
+class WappoEnvironment(object):
 
     def __init__(self, level_dict):
         self.level_dict = level_dict
@@ -422,7 +422,7 @@ class Wappo_Environment(object):
                      'down': (0, -1)}
         self.walls = level_dict['walls']
         self.append_field_boundaries()
-        self.pentagrams = level_dict['pentagrams']  # Liste mit Pentagrammen
+        self.pentagrams = level_dict['pentagrams']  # list of pentagrams
         self.pentagram_counter = 0  # counter, damit Monster über 3 Runden stehen bleibt
         self.monster_pentagram_frozen_steps = 0  # Schritte, die Monster in einem Pentagramm steht
         self.rewads_dict = {
@@ -438,7 +438,7 @@ class Wappo_Environment(object):
         self.pentagram_counter = 0
 
     def get_state(self):
-        return (self.position, self.position_monster, self.pentagram_counter)
+        return self.position, self.position_monster, self.pentagram_counter
 
     def append_field_boundaries(self):
         for x in range(1, self.field_size[0] + 1):
@@ -566,7 +566,7 @@ class Wappo_Environment(object):
                        marker='*', c='orange', s=800)
             ax.scatter(pentagram[0], pentagram[1],
                        s=800, facecolors='none', edgecolors='orange')
-        # draw hause:
+        # draw house:
         ax.scatter(self.goal[0], self.goal[1] - 0.2,
                    marker='s', c='green', s=150)
         ax.scatter(self.goal[0], self.goal[1] + 0.2,

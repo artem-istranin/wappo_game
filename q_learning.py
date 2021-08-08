@@ -2,7 +2,7 @@ import numpy as np
 import random
 import copy
 
-from environment import Wappo_Environment
+from environment import WappoEnvironment
 
 
 class QValues(object):
@@ -23,7 +23,7 @@ class QValues(object):
                     init_val = -0.5
                 elif init_val > 0.5:
                     init_val = 0.5
-            elif self.initialization_strategy == 'pure_zero':
+            elif self.initialization_strategy == 'zero':
                 init_val = 0
             else:
                 raise NotImplementedError('Unknown initialization_strategy')
@@ -47,7 +47,7 @@ class QValues(object):
         max_value = -np.inf
         max_action = actions[0] if actions else None
         for action in actions:
-            if not learning and not action in self.values[state]:
+            if not learning and action not in self.values[state]:
                 continue
 
             value = self.get_value(state, action)
@@ -65,8 +65,8 @@ class QValues(object):
         return self.max_action(state, actions)
 
 
-def evaluate_q_Wappo(q, level_dict, max_eval_steps=500):
-    env = Wappo_Environment(level_dict)
+def evaluate_q_wappo(q, level_dict, max_eval_steps=500):
+    env = WappoEnvironment(level_dict)
     env.reset()
     res_path = []
 
@@ -91,21 +91,21 @@ def q_learning(env, q=None, initialization_strategy='normal',
                nr_episodes=100, nr_steps=20, epsilon=0.1, alpha=0.1, gamma=0.98,
                epsilon_strategy='fixed', epsilon_multiplicator=0.5, epsilon_episodes_steps=10,
                alpha_strategy='fixed', alpha_multiplicator=0.5, alpha_episodes_steps=10,
-               alpha_summand=0.1,
-               nr_episodes_between_eval=10, optimization_by_evals=True,
-               show_intermediate_evals=True,
-               random_seed=None, debug=False):
-    if random_seed is not None:
-        np.random.seed(random_seed)
-        random.seed(random_seed + 5)
+               alpha_summand=0.1, nr_episodes_between_eval=10, optimization_by_evals=True,
+               show_intermediate_evals=True, random_seed=None, debug=False):
+    if random_seed is None:
+        random_seed = np.random.randint(100, 9999999)
+    np.random.seed(random_seed)
+    random.seed(random_seed + 5)
+    print('random seed value: {}'.format(random_seed))
 
     if not q:
         q = QValues(initialization_strategy=initialization_strategy)
 
     level_dict = env.level_dict
-    evaluation_report = evaluate_q_Wappo(q, level_dict, max_eval_steps=nr_steps)
+    evaluation_report = evaluate_q_wappo(q, level_dict, max_eval_steps=nr_steps)
     if show_intermediate_evals:
-        print('Episode 0: win_trigger = {}, steps_number = {}'.format(
+        print('Episode 0: win = {}, steps_number = {}'.format(
             evaluation_report['win_trigger'], evaluation_report['steps_number']))
     if optimization_by_evals:
         best_q = copy.deepcopy(q)
@@ -117,7 +117,6 @@ def q_learning(env, q=None, initialization_strategy='normal',
             print('=' * 50)
             print('Spiel #', curr_ep_nr)
             env.draw()
-        reward = 0
 
         if epsilon_strategy == 'fixed':
             curr_ep_epsilon = epsilon
@@ -180,8 +179,8 @@ def q_learning(env, q=None, initialization_strategy='normal',
                 if debug:
                     print('\t q_new \t = q_old + alpha * (reward + gamma * 0 - q_old)\n'
                           '\t\t = {:.2f} + {} * ({} + {} * 0 - {:.2f})\n'
-                          '\t\t = {:.2f}\n'.format(
-                        q_old, curr_ep_alpha, reward, gamma, q_old, q.get_value(state, action)))
+                          '\t\t = {:.2f}\n'.format(q_old, curr_ep_alpha, reward, gamma, q_old,
+                                                   q.get_value(state, action)))
                 break
 
             # Berechnung max_{A} (Q(S(t + 1), A(t + 1))):
@@ -198,12 +197,12 @@ def q_learning(env, q=None, initialization_strategy='normal',
             if debug:
                 print('\t q_new \t = q_old + alpha * (reward + gamma * q_next - q_old)\n'
                       '\t\t = {:.2f} + {} * ({} + {} * {:.2f} - {:.2f})\n'
-                      '\t\t = {:.2f}\n'.format(
-                    q_old, curr_ep_alpha, reward, gamma, q_next, q_old, q.get_value(state, action)))
+                      '\t\t = {:.2f}\n'.format(q_old, curr_ep_alpha, reward, gamma, q_next, q_old,
+                                               q.get_value(state, action)))
         if (curr_ep_nr + 1) % nr_episodes_between_eval == 0:
-            evaluation_report = evaluate_q_Wappo(q, level_dict, max_eval_steps=nr_steps)
+            evaluation_report = evaluate_q_wappo(q, level_dict, max_eval_steps=nr_steps)
             if show_intermediate_evals:
-                print('Episode {:d}: win_trigger = {}, steps_number = {}'.format(
+                print('Episode {:d}: win = {}, steps_number = {}'.format(
                     (curr_ep_nr + 1), evaluation_report['win_trigger'], evaluation_report['steps_number']))
             if optimization_by_evals:
                 if best_evaluation_report['win_trigger'] and not evaluation_report['win_trigger']:
@@ -217,10 +216,19 @@ def q_learning(env, q=None, initialization_strategy='normal',
                 best_evaluation_report.update({'episode_number': best_episode})
 
     if optimization_by_evals:
-        print('>>> Optimal evaluation (episode {:d}): win_trigger = {}, steps_number = {}'.format(
+        print('>>> Optimal evaluation (episode {:d}): win = {}, steps_number = {}'.format(
             (best_episode + 1), best_evaluation_report['win_trigger'], best_evaluation_report['steps_number']))
         return best_q, best_evaluation_report
     else:
-        evaluation_report = evaluate_q_Wappo(q, level_dict, max_eval_steps=nr_steps)
+        evaluation_report = evaluate_q_wappo(q, level_dict, max_eval_steps=nr_steps)
         evaluation_report.update({'episode_number': curr_ep_nr})
         return q, evaluation_report
+
+
+def test():
+    from environment import WAPPO_LEVELS
+    env = WappoEnvironment(WAPPO_LEVELS['level_1'])
+    q_learning(env, q=None, nr_episodes=3, nr_episodes_between_eval=10,
+               optimization_by_evals=False, nr_steps=20,
+               epsilon=0.1, alpha=0.1, gamma=0.98,
+               random_seed=123451, debug=True)
